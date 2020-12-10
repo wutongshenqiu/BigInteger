@@ -622,7 +622,7 @@ BigInteger BigInteger::ModularExponentiation(const BigInteger &b, const BigInteg
     std::vector<BigInteger> b2({ b });
     b2.resize(e2.size());
     for (auto i = 1; i < e2.size(); i++) {
-        b2[i] = (b2[i-1] * b2[i-1]) % m;
+        b2[i] = std::move((b2[i-1] * b2[i-1]) % m);
     }
 
     // result
@@ -635,4 +635,9 @@ BigInteger BigInteger::ModularExponentiation(const BigInteger &b, const BigInteg
     }
 
     return k;
+}
+
+BigInteger::BigInteger(BigInteger &&v) noexcept {
+    this->sign = v.sign;
+    this->digits = std::move(v.digits);
 }

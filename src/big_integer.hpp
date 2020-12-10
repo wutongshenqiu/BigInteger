@@ -57,6 +57,8 @@ public:
     explicit BigInteger(int64_t v);
     BigInteger(const BigInteger &v);
     explicit BigInteger(const std::string &s);
+    // move constructors
+    BigInteger(BigInteger &&v) noexcept;
 
     // Assignment operators:
     BigInteger &operator=(int64_t v);
