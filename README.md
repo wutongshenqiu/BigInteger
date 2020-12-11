@@ -27,9 +27,9 @@
 >
 > :white_check_mark: [Karatsuba Multiplication](https://en.wikipedia.org/wiki/Karatsuba_algorithm)
 >
-> :x: 大素数生成
+> :white_check_mark:[Miller–Rabin primality test](https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test)
 >
-> :x:[Miller–Rabin primality test](https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test)
+> :x: 大素数生成
 >
 > :x: 速度问题
 
