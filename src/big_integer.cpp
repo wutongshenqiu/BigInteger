@@ -511,7 +511,7 @@ BigInteger BigInteger::operator%(const BigInteger &v) const {
 }
 
 BigInteger & BigInteger::operator%=(const BigInteger &v) {
-    *this = *this % v;
+    *this = (*this % v);
 
     return *this;
 }
@@ -622,7 +622,7 @@ BigInteger BigInteger::ModularExponentiation(const BigInteger &b, const BigInteg
     std::vector<BigInteger> b2({ b });
     b2.resize(e2.size());
     for (auto i = 1; i < e2.size(); i++) {
-        b2[i] = std::move((b2[i-1] * b2[i-1]) % m);
+        b2[i] = (b2[i-1] * b2[i-1]) % m;
     }
 
     // result
@@ -639,5 +639,48 @@ BigInteger BigInteger::ModularExponentiation(const BigInteger &b, const BigInteg
 
 BigInteger::BigInteger(BigInteger &&v) noexcept {
     this->sign = v.sign;
-    this->digits = std::move(v.digits);
+    this->digits = v.digits;
+}
+
+BigInteger & BigInteger::operator=(BigInteger &&v) noexcept {
+    this->sign = v.sign;
+    this->digits = v.digits;
+
+    return *this;
+}
+
+bool BigInteger::MillerRabinTest(const BigInteger &v) {
+    if (v < 0) return MillerRabinTest(-v);
+
+    if (v < 3) return v == 2;
+    if (v.IsEven()) return false;
+
+    auto n = v - 1;
+    // n = 2^s*t
+    uint32_t s = 0;
+    while (n.IsEven()) {
+        s++;
+        n /= 2;
+    }
+
+    for (auto &a : KMillerRabinTestBase) {
+        if (v == a) return true;
+        // a^n = m (mod v)
+        auto m = ModularExponentiation(BigInteger(a), n, v);
+
+        if (m == 1 || m == v - 1) continue;
+
+        bool is_break = false;
+        for (auto j = 0; j < s; j++) {
+            auto k = m * m % v;
+            if (k == 1) return false;
+            if (k == v - 1) {
+                is_break = true;
+                break;
+            }
+        }
+        if (!is_break) return false;
+    }
+
+    return true;
 }

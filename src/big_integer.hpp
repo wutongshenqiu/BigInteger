@@ -23,6 +23,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <array>
 #include <tuple>
 #include <algorithm>
 #include <iomanip>
@@ -41,6 +42,10 @@ private:
     constexpr static uint32_t KMulShift = 20;
     constexpr static uint32_t KMulBase = 1 << KMulShift;
     constexpr static uint32_t KMulMask = KMulBase - 1;
+    // use for miller rabin test
+    constexpr static std::array<uint32_t, 9> KMillerRabinTestBase = {
+        2, 3, 5, 7, 11, 13, 17, 19, 23,
+    };
 
 private:
     // 符号标识
@@ -66,6 +71,8 @@ public:
     // TODO
     // default usage?
     BigInteger &operator=(const BigInteger &v);
+    // move assign
+    BigInteger &operator=(BigInteger &&v) noexcept;
 
     // Unary arithmetic operators:
     BigInteger operator+() const;
@@ -130,16 +137,20 @@ public:
 
 public:
     // get absolute value
-    BigInteger Abs() const;
+    [[nodiscard]] BigInteger Abs() const;
 
     // convert integer to string with base 10
-    std::string ToString() const;
+    [[nodiscard]] std::string ToString() const;
 
     // load from string with base10
     void FromString(const std::string &s);
 
-    inline bool IsZero() const {
+    [[nodiscard]] inline bool IsZero() const {
         return digits.empty() || (digits.size() == 1 && !digits[0]);
+    }
+
+    [[nodiscard]] inline bool IsEven() const {
+        return digits.empty() || (!(digits[0] & 1));
     }
 
 public:
@@ -195,4 +206,9 @@ public:
 
     // calculate `k` that satisfies b^e = k (mod m)
     static BigInteger ModularExponentiation(const BigInteger &b, const BigInteger &e, const BigInteger &m);
+
+    // miller-rabin primality test
+    static bool MillerRabinTest(const BigInteger &v);
+
+//    static bool IsPrime(const BigInteger &v);
 };
