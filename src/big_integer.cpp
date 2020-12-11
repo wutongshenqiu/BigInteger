@@ -313,7 +313,12 @@ std::vector<uint64_t> BigInteger::KaratsubaMultiplication(const std::vector<uint
     auto n = a.size();
     std::vector<uint64_t> res(n << 1);
     if (n <= 32) {
-        return GridMultiplication(a, b);
+        for (auto i = 0; i < a.size(); i++) {
+            for (auto j = 0; j < b.size(); j++) {
+                res[i + j] += a[i] * b[j];
+            }
+        }
+        return res;
     }
 
     auto k = n >> 1;
