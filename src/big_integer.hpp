@@ -154,6 +154,31 @@ public:
     }
 
 public:
+    // add two vectors
+    template<class T>
+    static std::vector<T> QuickAdd(const std::vector<T> &a, const std::vector<T> &b, uint32_t shift) {
+        if (a.size() < b.size()) return QuickAdd(b, a, shift);
+
+        std::vector<T> res(a.size() + 1);
+        T mask = (1 << shift) - 1;
+
+        T carry = 0;
+        for (auto i = 0; i < b.size(); i++) {
+            carry += a[i] + b[i];
+            res[i] = carry & mask;
+            carry >>= shift;
+        }
+
+        for (auto i = b.size(); i < a.size(); i++) {
+            carry += a[i];
+            res[i] = carry & mask;
+            carry >>= shift;
+        }
+        if (carry) res[res.size()-1] = carry;
+        else TrimZero(res);
+
+        return res;
+    }
     // Convert `old_digits` with `old_base` to `new_base`
     //
     // Args:

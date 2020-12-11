@@ -152,22 +152,9 @@ BigInteger BigInteger::operator-() const {
 BigInteger BigInteger::operator+(const BigInteger &v) const {
     if (sign == v.sign) {
         // choose longer one may avoid allocation in vector
-        BigInteger res = v.digits.size() > digits.size() ? v : *this;
-        uint32_t carry = 0;
-
-        for (auto i = 0; i < std::min(digits.size(), v.digits.size()); i++) {
-            carry += digits[i] + v.digits[i];
-            res.digits[i] = carry & KMask;
-            carry >>= KShift;
-        }
-
-        const BigInteger& longer = v.digits.size() > digits.size() ? v : *this;
-        for (auto i = std::min(digits.size(), v.digits.size()); i < longer.digits.size(); i++) {
-            carry += longer.digits[i];
-            res.digits[i] = carry & KMask;
-            carry >>= KShift;
-        }
-        if (carry) res.digits.push_back(carry);
+        BigInteger res;
+        res.sign = sign;
+        res.digits = QuickAdd(this->digits, v.digits, KShift);
 
         return res;
     }
