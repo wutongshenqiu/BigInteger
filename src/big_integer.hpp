@@ -62,6 +62,7 @@ public:
     explicit BigInteger(int64_t v);
     BigInteger(const BigInteger &v);
     explicit BigInteger(const std::string &s);
+    BigInteger(const std::vector<uint32_t> &d, uint32_t base, int sign);
     // move constructors
     BigInteger(BigInteger &&v) noexcept;
 
@@ -154,6 +155,14 @@ public:
     }
 
 public:
+    // ascii char to digit
+    inline static uint32_t CharToDigit(char c) {
+        if (c >= '0' && c <= '9') return c - '0';
+        if (c >= 'a' && c <= 'f') return c - 'a' + 10;
+        if (c >= 'A' && c <= 'F') return c - 'A' + 10;
+
+        return 0;
+    }
     // add two vectors
     template<class T>
     static std::vector<T> QuickAdd(const std::vector<T> &a, const std::vector<T> &b, uint32_t shift) {

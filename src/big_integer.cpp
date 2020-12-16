@@ -19,6 +19,11 @@ BigInteger::BigInteger(const std::string &s) {
     FromString(s);
 }
 
+BigInteger::BigInteger(const std::vector<uint32_t> &d, uint32_t base, int sign) {
+    this->sign = sign > 0 ? 1 : -1;
+    digits = ConvertBase(d, base, KBase);
+}
+
 BigInteger & BigInteger::operator=(int64_t v)  {
     digits.clear();
     sign = 1;
@@ -82,12 +87,19 @@ void BigInteger::FromString(const std::string &s) {
             ++pos;
         }
     }
+    uint32_t base = 10;
+    // get base of the string
+    if (pos < s.size() - 1) {
+        if (s[pos] == '0' && s[pos+1] == 'x') {
+            base = 16;
+            pos += 2;
+        }
+    }
 
-    auto char_to_digit = [](char c) -> uint32_t { return static_cast<uint32_t>(c - '0'); };
-    std::vector<uint32_t> digits_base10(s.size() - pos, 0);
-    std::transform(s.rbegin(), s.rend() - pos, digits_base10.begin(), char_to_digit);
+    std::vector<uint32_t> str_digits(s.size() - pos, 0);
+    std::transform(s.rbegin(), s.rend() - pos, str_digits.begin(), CharToDigit);
 
-    digits = ConvertBase(digits_base10, 10, KBase);
+    digits = ConvertBase(str_digits, base, KBase);
 }
 
 std::vector<uint32_t> BigInteger::ConvertBase(const std::vector<uint32_t> &old_digits, uint32_t old_base, uint32_t new_base)  {
