@@ -282,30 +282,12 @@ BigInteger & BigInteger::operator*=(const int64_t &v) {
     return *this;
 }
 
-std::vector<uint64_t> BigInteger::GridMultiplication(const std::vector<uint64_t> &a,
-                                                     const std::vector<uint64_t> &b) {
-    std::vector<uint64_t> res(a.size() + b.size(), 0);
-
-    for (auto i = 0; i < a.size(); i++) {
-        for (auto j = 0; j < b.size(); j++) {
-            res[i + j] += a[i] * b[j];
-        }
-    }
-
-    return res;
-}
-
 std::vector<uint64_t> BigInteger::KaratsubaMultiplication(const std::vector<uint64_t> &a,
                                                           const std::vector<uint64_t> &b) {
     auto n = a.size();
     std::vector<uint64_t> res(n << 1);
     if (n <= 32) {
-        for (auto i = 0; i < a.size(); i++) {
-            for (auto j = 0; j < b.size(); j++) {
-                res[i + j] += a[i] * b[j];
-            }
-        }
-        return res;
+        return GridMultiplication(a, b);
     }
 
     auto k = n >> 1;

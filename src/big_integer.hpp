@@ -206,8 +206,43 @@ public:
 
     // note:
     //      1. before use the result, call TrimZero
-    static std::vector<uint64_t> GridMultiplication(const std::vector<uint64_t> &a,
-                                                    const std::vector<uint64_t> &b);
+    inline static std::vector<uint64_t> GridMultiplication(const std::vector<uint64_t> &a,
+                                                           const std::vector<uint64_t> &b) {
+        std::vector<uint64_t> res(a.size() + b.size(), 0);
+
+        for (auto i = 0; i < a.size(); i++) {
+            for (auto j = 0; j < b.size(); j++) {
+                res[i + j] += a[i] * b[j];
+            }
+        }
+
+        return res;
+    }
+
+    inline static std::vector<uint32_t> GridMultiplication(const std::vector<uint32_t> &a,
+                                                           const std::vector<uint32_t> &b) {
+        std::vector<uint32_t> res(a.size() + b.size(), 0);
+
+        for (auto i = 0; i < a.size(); i++) {
+            uint64_t carry = 0;
+            auto pres = res.begin() + i;
+            auto pb = b.begin();
+            auto pbend = b.end();
+
+            while (pb != pbend) {
+                carry += *pres + *pb++ * static_cast<uint64_t>(a[i]);
+                *pres++ = static_cast<uint32_t>(carry & KMask);
+                carry >>= KShift;
+            }
+            if (carry) {
+                *pres += static_cast<uint32_t>(carry & KMask);
+            }
+        }
+
+        return res;
+    }
+
+
 
     // note:
     //      1. we assume vector `a` and `b` have the same size

@@ -179,6 +179,26 @@ TEST(test_bigint, test_grid_mul) {
     EXPECT_EQ(vector<uint64_t>({66456, 97557, 385320, 1737826, 24339047, 6672498256, 9986001914, 39273054566, 40499801327,
                                 1978255524115, 154021506508, 2104354936458, 59499923210, 627020248, 610691860, 589332352}),
               z);
+
+    vector<uint32_t> e = {0};
+    vector<uint32_t> f = {0};
+    auto zz = BigInteger::GridMultiplication(e, f);
+    BigInteger::TrimZero(zz);
+    EXPECT_EQ(vector<uint32_t>({}), zz);
+
+    e = {1, 0, 1};
+    f = {1, 0, 1};
+    zz = BigInteger::GridMultiplication(e, f);
+    BigInteger::TrimZero(zz);
+    EXPECT_EQ(vector<uint32_t>({1, 0, 2, 0, 1}), zz);
+
+    e = {123, 312, 6453, 4232};
+    f = {123, 645, 624, 744};
+    zz = BigInteger::GridMultiplication(e, f);
+    BigInteger::TrimZero(zz);
+    EXPECT_EQ(vector<uint32_t>({15129, 117711, 1071711, 4968921, 6988440, 7441800, 3148608}), zz);
+
+
 }
 
 TEST(test_bigint, test_karatsuba_mul) {
