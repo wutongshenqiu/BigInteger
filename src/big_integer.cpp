@@ -56,6 +56,25 @@ std::string BigInteger::ToString() const {
     return s;
 }
 
+std::string BigInteger::ToHexString() const {
+
+    if (digits.empty()) {
+        return "0";
+    }
+    std::string hex_string;
+    if (sign == -1) hex_string.push_back('-');
+    hex_string.append("0x");
+
+    auto hex_digits = BigInteger::QuickConvertBase(digits, BigInteger::KShift, 16);
+
+    std::string hex_str(hex_digits.size(), 0);
+    std::transform(hex_digits.rbegin(), hex_digits.rend(), hex_str.begin(), DigitToHex);
+
+    hex_string.append(hex_str);
+
+    return hex_string;
+}
+
 std::ostream& operator<<(std::ostream& os, const BigInteger& v) {
     if (v.digits.empty()) {
         os << '0';

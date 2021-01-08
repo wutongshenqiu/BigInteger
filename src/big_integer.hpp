@@ -143,6 +143,9 @@ public:
     // convert integer to string with base 10
     [[nodiscard]] std::string ToString() const;
 
+    // convert integer to string with base 10
+    [[nodiscard]] std::string ToHexString() const;
+
     // load from string with base10
     void FromString(const std::string &s);
 
@@ -162,6 +165,13 @@ public:
         if (c >= 'A' && c <= 'F') return c - 'A' + 10;
 
         return 0;
+    }
+
+    // digit to hex char
+    inline static char DigitToHex(uint32_t t) {
+        if (t >= 0 && t <= 9) return static_cast<char>(t + '0');
+        else if (t <= 15) return static_cast<char>(t - 10 + 'A');
+        else return 0;
     }
     // add two vectors
     template<class T>
